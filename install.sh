@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# ROCKNIX Hardware Support Installer for RK3326 Clones (Batlexp G350 / XF-45V)
+# ROCKNIX Hardware Support Installer for RK3326 Clones (XF-45V / R36S Max 2 / DC45V)
 # 1024x768 MIPI DSI, RK817 Audio Codec + Amp, Analog Multiplexer Joysticks
 # ==============================================================================
 
@@ -9,7 +9,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=========================================================================="
-echo " ROCKNIX Hardware Patch Installer for RK3326 Clone (G350 / XF-45V)"
+echo " ROCKNIX Hardware Patch Installer for RK3326 Clone (XF-45V / R36S Max 2 / DC45V)"
 echo "=========================================================================="
 
 TARGET_DIR=""
