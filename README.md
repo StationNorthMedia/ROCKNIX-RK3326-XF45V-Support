@@ -76,8 +76,8 @@ ROCKNIX-RK3326-Clone-XF45V-G350-Support/
 1. Stecke deine ROCKNIX MicroSD-Karte in deinen PC.
 2. Klone oder lade dieses Repository herunter:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ROCKNIX-RK3326-Clone-XF45V-G350-Support.git
-   cd ROCKNIX-RK3326-Clone-XF45V-G350-Support
+   git clone https://github.com/StationNorthMedia/ROCKNIX-RK3326-XF45V-Support.git
+   cd ROCKNIX-RK3326-XF45V-Support
    ```
 3. Starte das Installationsskript:
    ```bash
