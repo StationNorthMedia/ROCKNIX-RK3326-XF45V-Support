@@ -1,0 +1,73 @@
+/dts-v1/;
+// version: 17
+// last_comp_version: 16
+
+/ {
+    fragment@0 {
+        target-path = "/dsi@ff450000/panel@0";
+        __overlay__ {
+            compatible = "rocknix,generic-dsi";
+            panel_description =
+                "G size=153,85 delays=20,20,20,120,20 format=rgb888 lanes=4 flags=0xe03",
+
+                "M clock=62000 horizontal=1024,90,80,80 vertical=768,16,8,8 default=1",
+                "M clock=62050 horizontal=1024,90,115,80 vertical=768,16,146,19",
+                "M clock=62010 horizontal=1024,90,131,80 vertical=768,16,133,19",
+                "M clock=64320 horizontal=1024,90,132,80 vertical=768,16,167,19",
+                "M clock=66290 horizontal=1024,90,87,80 vertical=768,16,140,19",
+                "M clock=62560 horizontal=1024,90,86,80 vertical=768,16,47,19",
+                "M clock=68280 horizontal=1024,90,114,80 vertical=768,16,71,19",
+                "M clock=63000 horizontal=1024,90,80,80 vertical=768,16,22,19",
+                "M clock=62730 horizontal=1024,90,81,80 vertical=768,16,17,19",
+                "M clock=75890 horizontal=1024,90,120,80 vertical=768,16,169,8",
+                "M clock=90540 horizontal=1024,90,120,80 vertical=768,16,121,8",
+                "M clock=91800 horizontal=1024,90,81,80 vertical=768,16,8,8",
+                "M clock=122400 horizontal=1024,90,81,80 vertical=768,16,8,8",
+
+                "I seq=ee01", "I seq=ea07", "I seq=eb12",
+                "I seq=0a5e",
+                "I seq=1314", "I seq=1735",
+                "I seq=1d33",
+                "I seq=2101",
+                "I seq=2828", "I seq=2918", "I seq=2a63", "I seq=2ff3",
+                "I seq=ee02",
+                "I seq=39a9",
+                "I seq=0000", "I seq=010d", "I seq=0212", "I seq=0308", "I seq=040e", "I seq=0530", "I seq=060b", "I seq=070e",
+                "I seq=080f", "I seq=090e", "I seq=0a11", "I seq=0b4e", "I seq=0c14", "I seq=0d1a", "I seq=0e2f", "I seq=0f36",
+                "I seq=103f",
+                "I seq=2000", "I seq=210d", "I seq=2212", "I seq=2308", "I seq=240e", "I seq=2530", "I seq=260b", "I seq=270e",
+                "I seq=280f", "I seq=290e", "I seq=2a11", "I seq=2b4e", "I seq=2c14", "I seq=2d1a", "I seq=2e2f", "I seq=2f36",
+                "I seq=303f",
+                "I seq=ee04",
+                "I seq=0005", "I seq=0101", "I seq=0280", "I seq=0304", "I seq=0400", "I seq=0606", "I seq=0705",
+                "I seq=081a", "I seq=0920", "I seq=0a0e", "I seq=0b00",
+                "I seq=2040", "I seq=2408",
+                "I seq=ee05",
+                "I seq=0001", "I seq=0109", "I seq=0205", "I seq=0305", "I seq=0705",
+                "I seq=080d", "I seq=0900", "I seq=0a12", "I seq=0b14", "I seq=0c66",
+                "I seq=1003", "I seq=1107", "I seq=1205", "I seq=1305",
+                "I seq=1912", "I seq=1af6",
+                "I seq=4055", "I seq=4100", "I seq=4303", "I seq=4401", "I seq=4581", "I seq=4606", "I seq=4700",
+                "I seq=ee06",
+                "I seq=0045", "I seq=0201", "I seq=0488", "I seq=06cd",
+                "I seq=08ef", "I seq=09cd", "I seq=0aab", "I seq=0b89", "I seq=0c67", "I seq=0d45", "I seq=0e23", "I seq=0f01",
+                "I seq=ee07",
+                "I seq=003c", "I seq=013c", "I seq=023c", "I seq=033c", "I seq=040d", "I seq=053c", "I seq=063c", "I seq=073c",
+                "I seq=0808", "I seq=0910", "I seq=0a12", "I seq=0b14", "I seq=0c16", "I seq=0d18", "I seq=0e1a", "I seq=0f1c",
+                "I seq=101e", "I seq=1104", "I seq=1200", "I seq=133c", "I seq=140c", "I seq=153c",
+                "I seq=203c", "I seq=213c", "I seq=223c", "I seq=233c", "I seq=240d", "I seq=253c", "I seq=263c", "I seq=273c",
+                "I seq=2808", "I seq=2911", "I seq=2a13", "I seq=2b15", "I seq=2c17", "I seq=2d19", "I seq=2e1b", "I seq=2f1d",
+                "I seq=301f", "I seq=3105", "I seq=3201", "I seq=333c", "I seq=340c", "I seq=353c",
+                "I seq=ee08",
+                "I seq=1000", "I seq=12dc", "I seq=131c", "I seq=1723",
+                "I seq=1820",
+                "I seq=2080",
+                "I seq=ee0f",
+                "I seq=0001", "I seq=0100",
+                "I seq=ee00", "I seq=ea00", "I seq=eb00",
+                "I seq=3600",
+                "I seq=11 wait=200",
+                "I seq=29 wait=20";
+        };
+    };
+};
