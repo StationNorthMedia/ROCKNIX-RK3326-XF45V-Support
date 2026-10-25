@@ -5,9 +5,9 @@
 [![Status](https://img.shields.io/badge/Status-Fully%20Working%20(Display%2C%20Audio%2C%20Amp%2C%20Joypad)-success.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Complete hardware support package for the popular **RK3326 EE-Clone handhelds (marketed as XF-45V, R36S Max 2, and DC45V)** running modern **ROCKNIX (Mainline Linux 7.x / aarch64)**.
+Dedicated hardware support package for **RK3326 clone handhelds (marketed as XF-45V, R36S Max 2, and DC45V)** running modern **ROCKNIX (Mainline Linux 7.x / aarch64)**.
 
-This repository resolves all manufacturer-specific hardware discrepancies between these clone devices and generic RK3326 consoles (such as Anbernic RG351P or Odroid Go Advance). With these fixes, the **native 1024x768 display, audio codec, speaker amplifier, silent rumble motor, and calibrated analog joysticks** work out-of-the-box on standard ROCKNIX installations without requiring manual kernel compilation.
+This repository provides a **dedicated Device Tree Blob (`rk3326-xf45v.dtb`)** along with panel overlays and boot configurations, resolving all hardware discrepancies so that the **native 1024x768 display, audio codec, speaker amplifier, silent rumble motor, and calibrated analog joysticks** function out-of-the-box on standard ROCKNIX installations without custom kernel compilation.
 
 ---
 
@@ -30,10 +30,28 @@ This repository resolves all manufacturer-specific hardware discrepancies betwee
 
 ---
 
+## 🌐 Network & Connectivity Status (Wi-Fi & USB Networking)
+
+### ⚠️ Internal Wi-Fi (AIC8800) — Currently NOT Working
+* **Status:** Inactive under modern mainline Linux / ROCKNIX.
+* **Technical Cause:** The on-board wireless chip is an **Aicsemi AIC8800**. It currently relies on proprietary vendor kernel drivers compiled strictly for legacy Linux 4.4.189 kernels (found on stock darkOS / EmuELEC). No working mainline Linux driver exists yet in Linux 7.x.
+
+### ✅ Supported Network Solutions
+
+1. **External USB Wi-Fi Dongle (OTG Port):**
+   * Standard USB Wi-Fi dongles (e.g., Realtek `RTL8188EUS`, `RTL8192EU`, MediaTek `MT7601U`) work plug-and-play via the USB-C OTG port.
+   * *Hardware Tip:* 300 Mbps high-power dongles (like TP-Link TL-WN823N) draw up to 500 mA, which can cause voltage brownouts on battery power. We recommend compact **150 Mbps Nano USB sticks** (e.g., TL-WN725N) or a solid, short USB-C adapter to prevent disconnects.
+2. **USB Gadget Ethernet / PC Tethering (Recommended & Rock-Solid):**
+   * Simply connect a USB-C data cable from your PC to the handheld's **OTG port**.
+   * ROCKNIX automatically initializes as a USB Ethernet gadget (`rndis_host` / `cdc_ether`).
+   * Provides immediate internet sharing, high-speed file transfers, and instant SSH access at IP `169.254.170.2`.
+
+---
+
 ## 🔍 Root Cause Analysis: Why Stock ROCKNIX Failed
 
 1. **Black Screen (Display Inactivity):**  
-   Standard RK3326 firmware builds target 640×480 or 320×480 panels. Without the 4-lane MIPI DSI panel timing overlay (`mipi-panel.dtbo`) and panel reset/enable GPIO3 pin definitions, the screen received no clocks and remained pitch black.
+   Standard RK3326 builds target 640×480 or 320×480 panels. Without the 4-lane MIPI DSI panel timing overlay (`mipi-panel.dtbo`) and panel reset/enable GPIO3 pin definitions, the screen received no clocks and remained pitch black.
 2. **Audio Failure (*No soundcards found*):**  
    In generic DTBs, the internal RK817 sound card node was marked `status = "disabled"`, preventing ALSA from discovering the audio hardware.
 3. **Muted Speaker Output:**  
@@ -45,27 +63,35 @@ This repository resolves all manufacturer-specific hardware discrepancies betwee
 
 ---
 
-## 📦 Repository Structure
+## 📦 Dedicated DTB vs. Overwriting Original Files
+
+This package does **not** simply overwrite stock files blindly:
+* It introduces a **dedicated device tree identity**: **`rk3326-xf45v.dtb`**.
+* The bootloader config (`extlinux/extlinux.conf`) explicitly sets `FDT /rk3326-xf45v.dtb`.
+* The automated installer saves existing boot files into `backup_original/`.
+* Compatibility DTBs (`rk3326-gameconsole-eeclone.dtb`, `rg351v.dtb`, etc.) are also updated so that fallback boot entries or secondary profiles boot smoothly with working hardware.
 
 ```text
 ROCKNIX-RK3326-XF45V-Support/
 ├── dtb/
-│   ├── rk3326-gameconsole-eeclone.dtb   # Primary fully patched device tree blob
-│   ├── rk3326-anbernic-rg351v.dtb       # Compatibility fallback 1
-│   ├── rk3326-gameconsole-r36s.dtb      # Compatibility fallback 2
-│   └── rk3326-odroid-go2.dtb            # Compatibility fallback 3
+│   ├── rk3326-xf45v.dtb                 # Dedicated primary device tree blob
+│   ├── rk3326-gameconsole-eeclone.dtb   # Clone fallback target
+│   ├── rk3326-anbernic-rg351v.dtb       # Profile fallback 1
+│   ├── rk3326-gameconsole-r36s.dtb      # Profile fallback 2
+│   └── rk3326-odroid-go2.dtb            # Profile fallback 3
 ├── overlays/
 │   ├── mipi-panel.dtbo                  # Compiled 1024x768 MIPI DSI overlay
 │   └── mipi-panel.dts                   # Source code for panel timings & init sequence
 ├── extlinux/
-│   └── extlinux.conf                    # Bootloader config linking DTB & overlay
+│   └── extlinux.conf                    # Bootloader config setting FDT /rk3326-xf45v.dtb
 ├── dts/
-│   └── rk3326-gameconsole-eeclone.dts   # Complete decompiled, documented DTS source tree
+│   ├── rk3326-xf45v.dts                 # Dedicated DTS source tree
+│   └── rk3326-gameconsole-eeclone.dts   # Decompiled reference source tree
 ├── tools/
 │   └── importpanel.py                   # ROCKNIX generic-dsi panel tool
 ├── install.sh                           # 1-Click installer script (Linux PC or SSH)
 ├── LICENSE                              # MIT License
-└── README.md                            # Documentation
+└── README.md                            # Complete documentation
 ```
 
 ---
@@ -85,14 +111,14 @@ ROCKNIX-RK3326-XF45V-Support/
    chmod +x install.sh
    ./install.sh
    ```
-4. The installer automatically detects the mounted `ROCKNIX` FAT32 boot partition, creates a backup of your original configuration, and installs all DTBs and overlays.
+4. The installer automatically detects the mounted `ROCKNIX` FAT32 boot partition, backs up the previous configuration, and installs all dedicated DTBs and overlays.
 
 ---
 
 ### Method 2: Manual Installation (Drag & Drop)
 
 1. Open the FAT32 boot partition of your MicroSD card (labeled `ROCKNIX`).
-2. Copy the files inside `dtb/` into the **root** of the boot partition.
+2. Copy the files inside `dtb/` into the **root** directory of the boot partition.
 3. Copy `overlays/mipi-panel.dtbo` into the `overlays/` directory on the boot partition.
 4. Replace `extlinux/extlinux.conf` with the file from `extlinux/` in this repository.
 5. Safely unmount/eject the SD card and insert it into your handheld.
@@ -112,48 +138,19 @@ reboot
 
 ---
 
-## 🛠️ Technical Device Tree Specifications
+## 🤝 How to Notify & Upstream to the ROCKNIX Project
 
-### 1. Speaker Amplifier Node (`GPIO3_A7`)
-```dts
-audio-amplifier {
-    compatible = "simple-audio-amplifier";
-    enable-gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-    pinctrl-0 = <&amp_gpio>;
-    pinctrl-names = "default";
-    sound-name-prefix = "Speaker Amp";
-};
+We want the official ROCKNIX team to include this device out-of-the-box in future releases! Here is how to submit it:
 
-rk817-sound-amplified {
-    status = "okay";
-    simple-audio-card,aux-devs = <&audio_amp>;
-};
-```
-
-### 2. Analog Multiplexer & Joypad Driver (`rocknix-singleadc-joypad`)
-```dts
-joypad {
-    compatible = "rocknix-singleadc-joypad";
-    amux-count = <4>;
-    amux-channel-mapping = <3 2 0 1>;  /* Ch3=LeftX, Ch2=LeftY, Ch0=RightX, Ch1=RightY */
-    amux-en-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
-    amux-a-gpios  = <&gpio2 16 GPIO_ACTIVE_HIGH>;
-    amux-b-gpios  = <&gpio2 15 GPIO_ACTIVE_HIGH>;
-    invert-absx;
-    invert-absry;
-    
-    /* Shoulder & Function Keys */
-    sw20 { label = "GPIO TOP-RIGHT2"; gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;  linux,code = <0x139>; }; /* R2 */
-    sw21 { label = "GPIO TOP-LEFT2";  gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;  linux,code = <0x138>; }; /* L2 */
-    sw13 { label = "GPIO BTN_FN";      gpios = <&gpio3 26 GPIO_ACTIVE_LOW>; linux,code = <0x13C>; }; /* FN */
-};
-```
-
----
-
-## 🤝 Upstream Contribution
-
-This repository is designed to serve as a reference for upstream inclusion into the official [ROCKNIX Distribution](https://github.com/ROCKNIX/distribution). The provided `dts/rk3326-gameconsole-eeclone.dts` can be integrated directly into ROCKNIX kernel trees for RK3326 boards.
+1. **GitHub Pull Request / Issue:**
+   * Repository: [https://github.com/ROCKNIX/distribution](https://github.com/ROCKNIX/distribution)
+   * Submit an issue or PR with the file `dts/rk3326-xf45v.dts` and `overlays/mipi-panel.dtbo`.
+   * Reference the display timings and GPIO pinout documented in this README.
+2. **ROCKNIX Discord Community:**
+   * Join the official ROCKNIX Discord (linked at [rocknix.org](https://rocknix.org)).
+   * Share this repository in the `#rk3326` or `#development` channels. The maintainers actively integrate tested device trees for newly released clone models.
+3. **Community Forums (Reddit / RetroHandhelds):**
+   * Share this repository on [r/SBCGaming](https://reddit.com/r/SBCGaming) for users struggling with black screens on the XF-45V / R36S Max 2 / DC45V.
 
 ---
 

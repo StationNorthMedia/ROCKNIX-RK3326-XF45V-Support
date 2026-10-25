@@ -58,8 +58,11 @@ if [ -f "$TARGET_DIR/extlinux/extlinux.conf" ] && [ ! -f "$TARGET_DIR/backup_ori
     cp -v "$TARGET_DIR/extlinux/extlinux.conf" "$TARGET_DIR/backup_original/extlinux.conf.bak"
 fi
 
-# 5. Install patched Device Tree Blobs (DTBs)
-echo "[+] Installing patched DTB files..."
+# 5. Install dedicated and compatibility Device Tree Blobs (DTBs)
+echo "[+] Installing dedicated rk3326-xf45v.dtb..."
+cp -v "$SCRIPT_DIR/dtb/rk3326-xf45v.dtb" "$TARGET_DIR/rk3326-xf45v.dtb"
+
+echo "[+] Installing compatibility fallback DTBs..."
 cp -v "$SCRIPT_DIR/dtb/rk3326-gameconsole-eeclone.dtb" "$TARGET_DIR/rk3326-gameconsole-eeclone.dtb"
 cp -v "$SCRIPT_DIR/dtb/rk3326-anbernic-rg351v.dtb" "$TARGET_DIR/rk3326-anbernic-rg351v.dtb"
 cp -v "$SCRIPT_DIR/dtb/rk3326-gameconsole-r36s.dtb" "$TARGET_DIR/rk3326-gameconsole-r36s.dtb"
@@ -84,9 +87,10 @@ fi
 echo ""
 echo "=========================================================================="
 echo " [SUCCESS] All patches successfully applied!"
-echo " Display: 1024x768 4-Lane MIPI DSI enabled"
-echo " Audio:   RK817 Codec enabled + GPIO3_A7 Speaker Amp unmuted"
-echo " Input:   SARADC Analog Multiplexer & Gamepad axes calibrated"
-echo " Rumble:  Silent boot motor configuration active"
+echo " Dedicated DTB: /rk3326-xf45v.dtb (set as default in extlinux.conf)"
+echo " Display:       1024x768 4-Lane MIPI DSI enabled"
+echo " Audio:         RK817 Codec enabled + GPIO3_A7 Speaker Amp unmuted"
+echo " Input:         SARADC Analog Multiplexer & Gamepad axes calibrated"
+echo " Rumble:        Silent boot motor configuration active"
 echo "=========================================================================="
 echo "You can now safely unmount the SD card and boot your handheld."
